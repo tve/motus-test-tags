@@ -122,5 +122,5 @@ void loop() {
     Serial.println(state);
     rapidBlink();
   }
-  // delay(INTERVAL-100);
+  delay(INTERVAL-100);
 }
