@@ -15,6 +15,12 @@
   #define RFM69_RST   4
   #define LED_BUILTIN 13
   RF69 radio = new Module(RFM69_CS, RFM69_INT, RFM69_RST);
+#elif defined(ARDUINO_SAMD_FEATHER_M0)
+  #define RFM69_CS    8
+  #define RFM69_INT   3
+  #define RFM69_RST   4
+  #define LED_BUILTIN 13
+  RF69 radio = new Module(RFM69_CS, RFM69_INT, RFM69_RST);
 #endif
 
 // Encode 20-bit value into 32 bits
