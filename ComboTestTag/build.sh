@@ -23,7 +23,7 @@ fi
 arduino-cli compile --fqbn adafruit:samd:adafruit_feather_m0_express -e
 
 NAME=${PWD##*/}
-../uf2conv/uf2conv $NAME/uf2 build/*/$NAME.ino.bin
+../uf2conv/uf2conv build/*/$NAME.ino.bin $NAME.uf2
 
 if [[ -d /run/media/$USER/FEATHERBOOT ]]; then
     echo "Uploading"
