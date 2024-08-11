@@ -16,8 +16,11 @@ jobs:
           path: .
 
       - name: Install arduino
-        run: curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
-
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
+          ls
+          ls bin
+          sudo mv bin/arduino-cli /usr/bin
         shell: bash
         
       - name: Build firmwares
