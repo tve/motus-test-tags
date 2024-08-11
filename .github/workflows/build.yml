@@ -16,7 +16,7 @@ jobs:
           path: .
 
       - name: Install arduino
-        run: apt-get install arduino-cli
+        run: sudo apt-get install arduino-cli
         shell: bash
         
       - name: Build firmwares
