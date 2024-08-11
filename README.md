@@ -45,11 +45,7 @@ The firmware functionality is designed to serve both during station maintenance 
 station monitoring.
 
 - after power-on or reset the board transmits a Lotek ID and a CTT ID every 5.3 seconds for 24 hours
-- after the first 24 hours the board transmits the same Lotek ID and CTT ID with an interval of
-  25.1 seconds for four times approximately every hour
-
-Note that because Lotek tags with different intervals have different Motus tag IDs the Lotek
-transmissions will be recorded as two different Motus tags for the two intervals used.
+- after the first 24 hours the board transmits a run of 7 transmissions approximately every hour
 
 Note that this repository contains the source code for the test tag firmware and you are free to
 adapt it to your needs, so you can change the tag IDs as well as intervals (or anything else
@@ -74,7 +70,7 @@ Where to buy
 ------------
 
 The boards can be purchased from many stores and distributors that carry Adafruit products as
-well as from Adafruit directly.
+well as from [Adafruit](https://www.adafruit.com) directly.
 The README in each of the two tag variants has the exact product ID so you can be sure to get
 the right version (the designations can be confusing).
 Large electronics distributors and [Digikey](https://www.digikey.com) in particular carry these

@@ -1,0 +1,29 @@
+name: Build Firmwares
+
+on: [push]
+
+permissions:
+  id-token: write
+  contents: write
+
+jobs:
+  build-sketches:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          path: .
+
+      - name: Install arduino
+        run: apt-get arduino-cli
+        shell: bash
+        
+      - name: Build firmwares
+        run: ./build-all.sh
+        shell: bash
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: firmwares
+          path: */firmware.uf2

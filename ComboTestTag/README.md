@@ -15,7 +15,7 @@ board, 433Mhz version, product id 3179.
 Functionality
 -------------
 
-- after power-on or reset the board transmits a Lotek ID and a CTT ID every 8.1 seconds for 24 hours
+- after power-on or reset the board transmits a Lotek ID and a CTT ID every 5 seconds for 24 hours
 - after the first 24 hours the board switches to a different Lotek ID (same CTT ID) and transmits
   a run of 7 transmissions approximately every hour
 
@@ -27,8 +27,11 @@ Programming
   like a USB flash stick would
 - double press the reset button on the board, the LED should slowly pulse
 - drag'n'drop the downloaded file onto the drive
-- ...
-- Note MacOS 13.0 (Ventura) [appears to have issues](https://blog.adafruit.com/2022/10/31/uploading-uf2-files-with-macos-13-0-ventura-apple-microbit_edu-raspberry_pi-circuitpython/)
+- watch the LED: it should stay fully lit for ~3 seconds and then turn off, then blink
+  every 5 seconds
+
+
+Note: MacOS 13.0 (Ventura) [appears to have issues](https://blog.adafruit.com/2022/10/31/uploading-uf2-files-with-macos-13-0-ventura-apple-microbit_edu-raspberry_pi-circuitpython/)
   with this process, fixed in 13.1
 
 Board specific notes

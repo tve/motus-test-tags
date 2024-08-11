@@ -6,18 +6,14 @@
 
 // ===== Configurable settings
 
-// Lotek test tag code -- uncomment one of the tags beow, or add your own test tag
+// Lotek test tag code
 // The array has the three pulse intervals in milliseconds, and the interval between bursts in 1/10th seconds
-// Tag "TestTags,1.2": 21.973,19.531,24.414,25.698
-//static uint16_t lotekTag[] = {22, 20, 24, 257}; // ms, ms, ms, 1/10th sec
-// Tag "??": ??
-static const uint16_t lotekTag[] = {22, 54, 29, 81}; // ms, ms, ms, 1/10th sec
+// "TestTags:4"
+static const uint16_t lotekTag[] = {22, 34, 73, 53}; // ms, ms, ms, 1/10th sec
 
-// CTT test tag code -- uncomment one of the tags below or add your own test tag
+// CTT test tag code
 // The interval is the same as the Lotek test tag interval
-
-constexpr uint32_t cttTag = 0x78554c33; // TvE's test tag, feel free to use
-//static uint32_t cttTag = 0x613455FF; // Another test tag
+constexpr uint32_t cttTag = 0x78554c33; // TvE's test tag
 
 // Transmit power in the range 2..17 (dBm), 2dBm should be enough for a tag placed at a station
 constexpr float POW = 2;
