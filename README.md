@@ -4,6 +4,8 @@ Motus test tags
 Code to turn off-the-shelf microcontroller+radio boards into test tags
 for the Motus wildlife tracking system (https://motus.org).
 
+![Photo of two test tags](TestTags.jpg)
+
 The purpose of these test tags is to check out a station and to monitor station operation 24x7.
 The test tags can be carried in a pocket with a small LiPO battery when performing maintenance on
 a station to ensure that the receiver chain is working end-to-end before calling it good.
@@ -26,27 +28,28 @@ Test tag versions
 
 There are currently two test tag versions available:
 
+- [Lotek/CTT Combo Test Tag](/ComboTestTag) uses an Adafruit board with a modern
+  radio that can support both the CTT UHF frequency and the Lotek VHF frequencies.
+  If you are ordering boards to use as test tags this is the recommended one although it
+  may cost slightly more than the next one.
+
 - [CTT Test Tag](./CTTTestTag/) uses the same Adafruit board as the "CTT Motus Adapter" dongle
   for which CTT provides a receiver firmware, so you may have one of these already.
   The code here programs the board differently to act as a test tag.
   This board cannot transmit at the frequencies used by Lotek tags, hence it is CTT-only.
 
-- [Lotek/CTT Combo Test Tag](/ComboTestTag) uses a different Adafruit board with a different
-  radio that can support both the CTT 434Mhz frequency and the Lotek VHF frequencies.
-  If you are ordering boards to use as test tags this is the recommended one although it
-  may cost slightly more.
+Firmware functionality
+----------------------
 
-Firmware variants
------------------
+The firmware functionality is designed to serve both during station maintenance and for
+station monitoring.
 
-For simplicity two firmware variants are provided
-for each board with two different tag IDs and intervals built-in.
-- The primary variant's tag IDs correspond to the author's test tags and uses a 25.1 seconds
-interval (for both Lotek and CTT transmissions). This is one of the longer intervals and is
-useful when leaving a tag at a station 24x7.
-- The alternate firmware uses two different tag IDs in case you want to be able to distinguish
-from the primary firmware and it uses an 8.1 second interval, which is a bot more convenient
-for tags used during station maintenance because the wait time to get confirmation is shorter.
+- after power-on or reset the board transmits a Lotek ID and a CTT ID every 5.3 seconds for 24 hours
+- after the first 24 hours the board transmits the same Lotek ID and CTT ID with an interval of
+  25.1 seconds for four times approximately every hour
+
+Note that because Lotek tags with different intervals have different Motus tag IDs the Lotek
+transmissions will be recorded as two different Motus tags for the two intervals used.
 
 Note that this repository contains the source code for the test tag firmware and you are free to
 adapt it to your needs, so you can change the tag IDs as well as intervals (or anything else
@@ -73,7 +76,7 @@ Where to buy
 The boards can be purchased from many stores and distributors that carry Adafruit products as
 well as from Adafruit directly.
 The README in each of the two tag variants has the exact product ID so you can be sure to get
-the right version (it can be confusing).
+the right version (the designations can be confusing).
 Large electronics distributors and [Digikey](https://www.digikey.com) in particular carry these
 boards and have worldwide reach (Digikey is happy to sell qty 1 to individuals).
 Amazon is most likely a source as well, although the 433Mhz version may be less available.
@@ -87,8 +90,14 @@ How-To
 ------
 
 The Adafruit boards all have a Micro-USB connector. You will need to download the test tag
-firmware from github (here), install the programming software (Arduino), plug the board into
-a laptop and program the board, and then check out the results!
+firmware from github (here), plug the board into a laptop and program the board,
+drag the downloaded file into the flash drive that appears, and then check out the results!
+That's about as easy as it gets...
+
+If you get a LiPO and intend to stick the tag into your pocket you should wrap some electrical
+tape around the board+LiPO to make a handy protected little package.
+Just keep the two connectors exposed so you can easy charge the LiPO and also unplug it when
+you are not using it...
 
 ### Antenna
 
@@ -108,10 +117,6 @@ out of a metal enclosure.
 Technically, the antenna should be about 16-17cm long for 434Mhz and about 42-45cm for 166Mhz
 but this seems to produce a signal way stringer than needed.
 
-### Steps
-
-... to be written...
-
 Notes
 -----
 
@@ -122,4 +127,4 @@ All the information used to encode the tag IDs was gathered through reverse engi
 author does not provide any guarantee that anything here is fit for any purpose.
 
 Please keep in mind that by their nature test tags emit RF signals which are governed by FCC, ETSI,
-other regulatory agencies.
+or other regulatory agencies.
