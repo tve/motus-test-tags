@@ -30,3 +30,13 @@ jobs:
         with:
           name: firmwares
           path: ./*/*.uf2
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: ./*/*.uf2
+          prerelease: true
+          draft: true
+          make_latest: false
+          
