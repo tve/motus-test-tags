@@ -1,1 +1,3 @@
-uf2conv/
+uf2conv/uf2conv
+*.uf2
+build/

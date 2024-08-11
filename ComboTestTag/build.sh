@@ -16,13 +16,16 @@ if ! [[ -f $HOME/.arduino15/library_index.json ]]; then
 fi
 arduino-cli lib install RadioLib@6.6.0 CRC@1.0.3 "Arduino Low Power@1.2.2"
 
-# if ! [[ -x ../uf2conv/uf2conv ]]; then
-#     ( cd ../uf2conv; cc -o uf2conv uf2conv.c)
-# fi
+if ! [[ -x ../uf2conv/uf2conv ]]; then
+    ( cd ../uf2conv; cc -o uf2conv uf2conv.c)
+fi
 
-arduino-cli compile --fqbn adafruit:samd:adafruit_feather_m0_express
+arduino-cli compile --fqbn adafruit:samd:adafruit_feather_m0_express -e
+
+NAME=${PWD##*/}
+../uf2conv/uf2conv build/*/$NAME.ino.bin $NAME.uf2
 
 if [[ -d /run/media/$USER/FEATHERBOOT ]]; then
     echo "Uploading"
-    cp firmware.uf2 /run/media/$USER/FEATHERBOOT
+    cp $NAME.uf2 /run/media/$USER/FEATHERBOOT
 fi

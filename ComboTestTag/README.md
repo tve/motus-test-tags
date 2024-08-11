@@ -9,26 +9,31 @@ station in order to get 24x7 monitoring of the station performance.
 The test tag is built on the Adafruit
 [Feather M0 with LoRa Radio Module](https://learn.adafruit.com/adafruit-feather-m0-radio-with-lora-radio-module/overview)
 board, 433Mhz version, product id 3179.
+Also available at [Digi-Key](https://www.digikey.com/en/products/detail/adafruit-industries-llc/3179/6098604).
 
 ![Adafruit product 3179](Adafruit_3179.png)
 
 Functionality
 -------------
 
-- after power-on or reset the board transmits a Lotek ID and a CTT ID every 8.1 seconds for 24 hours
-- after the first 24 hours the board switches to a different Lotek ID (same CTT ID) and transmits
-  a run of 7 transmissions approximately every hour
+- after power-on or reset the board transmits a Lotek ID and a CTT ID every 5.3 seconds for 24 hours
+- after the first 24 hours the board transmits a run of 7 transmissions approximately every hour
+
+**Note: the current pre-release firmware does not switch mode after 24 hours**
 
 Programming
 -----------
 
-- download the firmware from this repo's releases, the file name should end in `.uf2`
+- download the firmware from this repo's [releases](https://github.com/tve/motus-test-tags/releases),
+  the file name should end in `.uf2`, e.g. `ComboTestTag.uf2`
 - plug the board into your computer (windows, mac, linux), it should show up as a new drive
   like a USB flash stick would
 - double press the reset button on the board, the LED should slowly pulse
 - drag'n'drop the downloaded file onto the drive
-- ...
-- Note MacOS 13.0 (Ventura) [appears to have issues](https://blog.adafruit.com/2022/10/31/uploading-uf2-files-with-macos-13-0-ventura-apple-microbit_edu-raspberry_pi-circuitpython/)
+- watch the LED: it should stay fully lit for ~3 seconds and then turn off, then blink
+  every 5 seconds
+
+Note: MacOS 13.0 (Ventura) [appears to have issues](https://blog.adafruit.com/2022/10/31/uploading-uf2-files-with-macos-13-0-ventura-apple-microbit_edu-raspberry_pi-circuitpython/)
   with this process, fixed in 13.1
 
 Board specific notes
