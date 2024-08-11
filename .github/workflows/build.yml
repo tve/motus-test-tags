@@ -18,9 +18,8 @@ jobs:
       - name: Install arduino
         run: |
           curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
-          ls
-          ls bin
           sudo mv bin/arduino-cli /usr/bin
+          rmdir bin
         shell: bash
         
       - name: Build firmwares
@@ -30,4 +29,4 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: firmwares
-          path: "*/firmware.uf2"
+          path: ./**/firmware.uf2
