@@ -26,4 +26,4 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: firmwares
-          path: */firmware.uf2
+          path: "*/firmware.uf2"
