@@ -20,12 +20,15 @@ if ! [[ -x ../uf2conv/uf2conv ]]; then
     ( cd ../uf2conv; cc -o uf2conv uf2conv.c)
 fi
 
-arduino-cli compile --fqbn adafruit:samd:adafruit_feather_m0_express -e
+for FREQ in 150.1 166.38; do
+    arduino-cli compile --fqbn adafruit:samd:adafruit_feather_m0_express -e \
+        --build-property "compiler.cpp.extra_flags=-DLTK_FREQ=$FREQ"
 
-NAME=${PWD##*/}
-../uf2conv/uf2conv build/*/$NAME.ino.bin $NAME.uf2
+    NAME=${PWD##*/}
+    ../uf2conv/uf2conv build/*/$NAME.ino.bin $NAME-${FREQ/./_}.uf2
+done
 
 if [[ -d /run/media/$USER/FEATHERBOOT ]]; then
     echo "Uploading"
-    cp $NAME.uf2 /run/media/$USER/FEATHERBOOT
+    cp $NAME-166_38.uf2 /run/media/$USER/FEATHERBOOT
 fi

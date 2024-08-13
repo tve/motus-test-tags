@@ -29,9 +29,11 @@ constexpr uint32_t cttTag = 0x78554c33; // TvE's test tag
 // Transmit power in the range 2..17 (dBm), 2dBm should be enough for a tag placed at a station
 constexpr float POW = 2;
 
-// Lotek frequency
-constexpr float LOTEK_FREQ = 166.38;
-//constexpr float LOTEK_FREQ = 150.1
+// Lotek frequency (is passed into the compilation when using automated builds, hence the #ifndef)
+#ifndef LTK_FREQ
+#define LTK_FREQ 166.38
+#endif
+constexpr float LOTEK_FREQ = LTK_FREQ;
 
 // ===== End of configurable settings
 
