@@ -85,9 +85,13 @@ _weaker_ RF signal not a stronger one!
 How-To
 ------
 
-The Adafruit boards all have a Micro-USB connector. You will need to download the test tag
-firmware, plug the board into a laptop and program the board,
-drag the downloaded file into the flash drive that appears, and then check out the results!
+The Adafruit boards all have a Micro-USB connector and programming them is dead simple:
+- download the test tag firmware
+- plug the board into a laptop
+- double-press the reset button on the board
+- drag the downloaded file into the flash drive that appears
+- enjoy the LED blinking for every transmission
+
 That's about as easy as it gets... Details in the respective tag's README.
 
 If you get a LiPO and intend to stick the tag into your pocket you should wrap some electrical

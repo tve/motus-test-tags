@@ -24,12 +24,11 @@ Programming
 
 - download the firmware from this repo's [releases](https://github.com/tve/motus-test-tags/releases),
   the file name should end in `.uf2`, e.g. `ComboTestTag.uf2`
-- plug the board into your computer (windows, mac, linux), it should show up as a new drive
-  like a USB flash stick would
+- plug the board into your computer (windows, mac, linux)
 - double press the reset button on the board, the LED should slowly pulse
 - drag'n'drop the downloaded file onto the drive
 - watch the LED: it should stay fully lit for ~3 seconds and then turn off, then blink
-  every 5 seconds
+  every 5 seconds (for each transmission)
 
 Note: MacOS 13.0 (Ventura) [appears to have issues](https://blog.adafruit.com/2022/10/31/uploading-uf2-files-with-macos-13-0-ventura-apple-microbit_edu-raspberry_pi-circuitpython/)
   with this process, fixed in 13.1
