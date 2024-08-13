@@ -6,6 +6,17 @@
 
 // ===== Configurable settings
 
+#if 1
+constexpr uint32_t INITIAL_HOURS = 12; // for how many hours to TX every few seconds
+constexpr uint32_t RUN_LENGTH = 7; // after INITIAL_HOURS how many TX in a run
+constexpr uint32_t SLEEP_MINUTES = 67; // after INITIAL_HOURS how long to sleep between runs
+#else
+// values for testing
+constexpr uint32_t INITIAL_HOURS = 1; // for how many hours to TX every few seconds
+constexpr uint32_t RUN_LENGTH = 7; // after INITIAL_HOURS how many TX in a run
+constexpr uint32_t SLEEP_MINUTES = 17; // after INITIAL_HOURS how long to sleep between runs
+#endif
+
 // Lotek test tag code
 // The array has the three pulse intervals in milliseconds, and the interval between bursts in 1/10th seconds
 // "TestTags:4"
@@ -24,12 +35,7 @@ constexpr float LOTEK_FREQ = 166.38;
 
 // ===== End of configurable settings
 
-// SX1278 has the following connections:
-// NSS pin:   10
-// DIO0 pin:  2
-// RESET pin: 9
-// DIO1 pin:  3
-SX1278 radio = new Module(8, 3, 4, 3);
+SX1278 radio = new Module(8, 3, 4); // D8:CS, D3:IRQ, D4:RST
 
 // ===== Lotek radio configuration
 
@@ -177,6 +183,7 @@ void deepSleep(uint32_t ms) {
 
 uint32_t next;
 uint32_t count = 0;
+uint32_t oneDay = INITIAL_HOURS * 3600 *10/lotekTag[3]; // number of intervals after which to switch mode
 
 void setup() {
   pinMode(LED_BUILTIN, OUTPUT);
@@ -185,12 +192,17 @@ void setup() {
   Serial.begin(115200);
   uint32_t t0 = millis();
   while (!Serial && millis()-t0 < 2000) { delay(1); } // blocks 'til USB is opened
-  delay(2000); // get a nice long blink...
+  delay(1000); // get a nice long blink...
 
-  Serial.println(F("\n\nMotus Lotek/CTT combo test tag"));
+  Serial.println("\n\nMotus Lotek/CTT combo test tag");
   setupLotek();
   setupCTT();
   digitalWrite(LED_BUILTIN, 0);
+
+  // Serial.print("Port A.DIR ");
+  // Serial.println(PORT->Group[0].DIR.reg, 16);
+  // Serial.print("Port B.DIR ");
+  // Serial.println(PORT->Group[1].DIR.reg, 16);
 
   next = millis() + 500;
 }
@@ -199,11 +211,19 @@ uint32_t t0 = 0;
 
 void loop() {
   digitalWrite(LED_BUILTIN, 0);
-  uint32_t dt = millis() - t0;
-  uint32_t d = ltkInterval - dt;
-  Serial.println(d);
-  if (d > 1100 && count > 2) deepSleep(d);
-  else delay(d);
+
+  if (count > oneDay && count % RUN_LENGTH == 0) {
+    // after the first 24 hours sleep for 67 minutes every 7 transmissions
+    deepSleep(SLEEP_MINUTES * 60 * 1000);
+  } else {
+    // sleep for the interval between bursts
+    // this is a bit complicated 'cause deepSleep operates at 1 second granularity and we need better
+    uint32_t dt = millis() - t0;
+    uint32_t d = ltkInterval - dt;
+    Serial.println(d);
+    if (d > 1100 && count > 2) deepSleep(d);
+    else delay(d);
+  }
   t0 = millis();
 
   digitalWrite(LED_BUILTIN, 1);

@@ -16,10 +16,8 @@ Also available at [Digi-Key](https://www.digikey.com/en/products/detail/adafruit
 Functionality
 -------------
 
-- after power-on or reset the board transmits a Lotek ID and a CTT ID every 5.3 seconds for 24 hours
-- after the first 24 hours the board transmits a run of 7 transmissions approximately every hour
-
-**Note: the current pre-release firmware does not switch mode after 24 hours**
+- after power-on or reset the board transmits a Lotek ID and a CTT ID every 5.3 seconds for 12 hours
+- after the first 12 hours the board transmits a run of 7 transmissions approximately every hour
 
 Programming
 -----------
@@ -50,7 +48,14 @@ Board specific notes
 Power consumption
 -----------------
 
-- idle: 200uA
-- TX: 200-300ms (depends on lotek tag) ~20mA avg -> about 4.4mAs or 16mJ @3.7V
-- assuming 25s interval: about 180-200mAh per month
-- more investigation needed...
+The power consumption is disappointingly high. Not on a scale that would be noticeable when
+plugged in, but the battery life is far shorter than it needs to be.
+At the moment the bottom line is:
+
+- the tag needs 170mAh per month, so a 1000mAh LiPO should last a bit over 5 months (untested!)
+
+The specifics are that the tag consumes 165-170uA when idle and with the 7 pulses per hour schedule
+the TX consumption doesn't matter much (~20mA for 200-300ms). It should be possible to bring the
+idle consumption down to around 60uA but it's unclear what the problem is...
+This is one downside of using an off-the-shelf board...
+

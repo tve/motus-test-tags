@@ -44,8 +44,8 @@ Firmware functionality
 The firmware functionality is designed to serve both during station maintenance and for
 station monitoring.
 
-- after power-on or reset the board transmits a Lotek ID and a CTT ID every 5.3 seconds for 24 hours
-- after the first 24 hours the board transmits a run of 7 transmissions approximately every hour
+- after power-on or reset the board transmits a Lotek ID and a CTT ID every 5.3 seconds for 12 hours
+- after the first 12 hours the board transmits a run of 7 transmissions approximately every hour
 
 Note that this repository contains the source code for the test tag firmware and you are free to
 adapt it to your needs, so you can change the tag IDs as well as intervals (or anything else
@@ -73,8 +73,8 @@ The boards can be purchased from many stores and distributors that carry Adafrui
 well as from [Adafruit](https://www.adafruit.com) directly.
 The README in each of the two tag variants has the exact product ID so you can be sure to get
 the right version (the designations can be confusing).
-Large electronics distributors and [Digikey](https://www.digikey.com) in particular carry these
-boards and have worldwide reach (Digikey is happy to sell qty 1 to individuals).
+Large electronics distributors and [Digi-Key](https://www.digikey.com) in particular carry these
+boards and have worldwide reach (Digi-Key is happy to sell qty 1 to individuals).
 Amazon is most likely a source as well, although the 433Mhz version may be less available.
 
 Note that in a pinch the 915Mhz versions of these boards are 99% likely to work because the
