@@ -23,7 +23,7 @@ Programming
 -----------
 
 - download the firmware from this repo's [releases](https://github.com/tve/motus-test-tags/releases),
-  the file name should end in `.uf2`, e.g. `ComboTestTag.uf2`
+  for the frequency in your region, the file name should end in `.uf2`, e.g. `ComboTestTag-166_38.uf2`
 - plug the board into your computer (windows, mac, linux)
 - double press the reset button on the board, the LED should slowly pulse
 - drag'n'drop the downloaded file onto the drive
