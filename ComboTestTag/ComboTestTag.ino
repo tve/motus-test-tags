@@ -20,10 +20,16 @@ constexpr uint32_t SLEEP_MINUTES = 17; // after INITIAL_HOURS how long to sleep 
 // Lotek test tag code
 // The array has the three pulse intervals in milliseconds, and the interval between bursts in 1/10th seconds
 // "TestTags:4"
+// WARNING: do not change this randomly: you are likely generate bad data that compromises scientific
+// projects by producing fake detections. A valid use-case would be to change to the code of a test
+// tag code you own and have registered with Motus.
 static const uint16_t lotekTag[] = {22, 34, 73, 53}; // ms, ms, ms, 1/10th sec
 
 // CTT test tag code
 // The interval is the same as the Lotek test tag interval
+// WARNING: do not change this randomly: you are likely generate bad data that compromises scientific
+// projects by producing fake detections. A valid use-case would be to change to the code of a test
+// tag code you own and have registered with Motus.
 constexpr uint32_t cttTag = 0x78554c33; // TvE's test tag
 
 // Transmit power in the range 2..17 (dBm), 2dBm should be enough for a tag placed at a station
