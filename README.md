@@ -44,12 +44,8 @@ Firmware functionality
 The firmware functionality is designed to serve both during station maintenance and for
 station monitoring.
 
-- after power-on or reset the board transmits a Lotek ID and a CTT ID every 5.3 seconds for 12 hours
-- after the first 12 hours the board transmits a run of 7 transmissions approximately every hour
-
-Note that this repository contains the source code for the test tag firmware and you are free to
-adapt it to your needs, so you can change the tag IDs as well as intervals (or anything else
-for that matter).
+- after power-on or reset the board transmits a Lotek ID and a CTT ID every 5 seconds for 12 hours
+- after the first 12 hours the board transmits 15 times at 40 second interval every ~67 minutes
 
 Battery
 -------

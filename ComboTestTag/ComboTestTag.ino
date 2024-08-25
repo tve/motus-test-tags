@@ -8,22 +8,31 @@
 
 #if 1
 constexpr uint32_t INITIAL_HOURS = 12; // for how many hours to TX every few seconds
-constexpr uint32_t RUN_LENGTH = 7; // after INITIAL_HOURS how many TX in a run
+// if SWITCH_8X is true then change to 8x the interval (lotekTag[3]) after INITIAL_HOURS
+constexpr bool SWITCH_8X = true;
+constexpr uint32_t RUN_LENGTH = 15; // after INITIAL_HOURS how many TX in a run
 constexpr uint32_t SLEEP_MINUTES = 67; // after INITIAL_HOURS how long to sleep between runs
 #else
 // values for testing
-constexpr uint32_t INITIAL_HOURS = 1; // for how many hours to TX every few seconds
-constexpr uint32_t RUN_LENGTH = 7; // after INITIAL_HOURS how many TX in a run
-constexpr uint32_t SLEEP_MINUTES = 17; // after INITIAL_HOURS how long to sleep between runs
+constexpr uint32_t INITIAL_HOURS = 1;
+constexpr bool SWITCH_8X = true;
+constexpr uint32_t RUN_LENGTH = 15;
+constexpr uint32_t SLEEP_MINUTES = 17;
 #endif
 
 // Lotek test tag code
-// The array has the three pulse intervals in milliseconds, and the interval between bursts in 1/10th seconds
-// "TestTags:4"
-// WARNING: do not change this randomly: you are likely generate bad data that compromises scientific
+// WARNING:
+// Do not change this randomly: you are likely generate bad data that compromises scientific
 // projects by producing fake detections. A valid use-case would be to change to the code of a test
 // tag code you own and have registered with Motus.
-static const uint16_t lotekTag[] = {22, 34, 73, 53}; // ms, ms, ms, 1/10th sec
+// The values set correspond to Lotek ID#732, which has been dedicated for beacon tags, and the
+// the 40s interval in particular is used by Motus for that purpose, allowing special processing of
+// such tag detections.
+// The interval is set to 5 seconds here, which is more convenient at start-up to quickly verify
+// reception, it will be detected as tag by the back-end every 8 intervals, and it switches to 8x
+// the interval after the INITIAL_HOURS (assuming SWITCH_8X is true above).
+// The array has the three pulse intervals in milliseconds, and the interval between bursts in 1/10th seconds
+static const uint16_t lotekTag[] = {159, 156, 34, 50}; // ms, ms, ms, 1/10th sec
 
 // CTT test tag code
 // The interval is the same as the Lotek test tag interval
@@ -44,6 +53,14 @@ constexpr float LOTEK_FREQ = LTK_FREQ;
 // ===== End of configurable settings
 
 SX1278 radio = new Module(8, 3, 4); // D8:CS, D3:IRQ, D4:RST
+void blink(); // forward declaration
+
+void checkBlink(int16_t status) {
+  if (status == RADIOLIB_ERR_NONE) return;
+  Serial.print("Radiolib error ");
+  Serial.println(status);
+  blink();
+}
 
 // ===== Lotek radio configuration
 
@@ -67,20 +84,29 @@ uint8_t addPulse(uint16_t millis) {
   return byteOff+1;
 }
 
+// volatile bool ltkMore;
+
+// void fifoAdd(void) {
+//   ltkMore = true;
+// }
+
 void setupLotek() {
   // Generate packet to match desired burst
   for (int i=0; i<MAXPKT; i++) ltkPacket[i] = 0;
-  int off = 24; addPulse(off);
+  int off = 4; addPulse(off);
   off += lotekTag[0];
   for (int i=0; i<3; i++, off+=lotekTag[i]) ltkPacketLen = addPulse(off);
-  radio.fixedPacketLengthMode(ltkPacketLen);
+  // for (int i=0; i<ltkPacketLen; i++) if (ltkPacket[i] == 0) ltkPacket[i] = 0x04;
+  // ltkPacket[ltkPacketLen+4] = 0xff;
+  // ltkPacket[ltkPacketLen+5] = 0xff;
+  // ltkPacketLen+=6;
 
   Serial.print("Lotek tag [");
   Serial.print(lotekTag[0]); Serial.print(" ");
   Serial.print(lotekTag[1]); Serial.print(" ");
   Serial.print(lotekTag[2]); Serial.print("] ");
   Serial.print(lotekTag[3]/10); Serial.print(".");
-  Serial.print(lotekTag[3]%10); Serial.print("ms @");
+  Serial.print(lotekTag[3]%10); Serial.print("s @");
   Serial.print(LOTEK_FREQ); Serial.println("Mhz");
 
   // print OOK packet for debugging
@@ -90,6 +116,10 @@ void setupLotek() {
     Serial.print(ltkPacket[i], 16);
   }
   Serial.println();
+  if (ltkPacketLen > MAXPKT) {
+    Serial.println("Lotek tag burst is too long!");
+    blink();
+  }
 }
 
 int configLotek() {
@@ -104,11 +134,13 @@ int configLotek() {
     Serial.println(state);
     digitalWrite(LED_BUILTIN, HIGH);
   } else {
-    radio.setSyncWord(nullptr, 0);
-    radio.setCurrentLimit(100);
-    radio.setDataShapingOOK(1);
-    radio.setCRC(0);
-    radio.fixedPacketLengthMode(ltkPacketLen);
+    checkBlink(radio.setSyncWord(nullptr, 0));
+    checkBlink(radio.setCurrentLimit(100));
+    checkBlink(radio.setDataShapingOOK(1));
+    checkBlink(radio.setCRC(0));
+    // checkBlink(radio.fixedPacketLengthMode(ltkPacketLen));
+    // radio.setFifoEmptyAction(fifoAdd); // DIO1 not connected, so no point calling this...
+    checkBlink(radio.fixedPacketLengthMode(0));
   }
 
   return state;
@@ -146,11 +178,12 @@ int configCTT() {
     Serial.println(state);
     digitalWrite(LED_BUILTIN, HIGH);
   } else {
-    radio.fixedPacketLengthMode(5);
-    radio.setSyncWord((uint8_t*)sync, sizeof(sync));
-    // radio.setWhitening(false);
-    radio.setDataShaping(RADIOLIB_SHAPING_NONE);
-    radio.setCRC(0);
+    radio.setFifoEmptyAction(nullptr);
+    checkBlink(radio.fixedPacketLengthMode(5));
+    checkBlink(radio.setSyncWord((uint8_t*)sync, sizeof(sync)));
+    // checkBlink(radio.setWhitening(false));
+    checkBlink(radio.setDataShaping(RADIOLIB_SHAPING_NONE));
+    checkBlink(radio.setCRC(0));
   }
   return state;
 }
@@ -220,15 +253,18 @@ uint32_t t0 = 0;
 void loop() {
   digitalWrite(LED_BUILTIN, 0);
 
+  // sleep in-between bursts
+
   if (count > oneDay && count % RUN_LENGTH == 0) {
-    // after the first 24 hours sleep for 67 minutes every 7 transmissions
+    // after the first 24 hours sleep for SLEEP_MINUTES minutes every RUN_LENGTH transmissions
     deepSleep(SLEEP_MINUTES * 60 * 1000);
   } else {
     // sleep for the interval between bursts
     // this is a bit complicated 'cause deepSleep operates at 1 second granularity and we need better
     uint32_t dt = millis() - t0;
-    uint32_t d = ltkInterval - dt;
-    Serial.println(d);
+    uint32_t intv = SWITCH_8X && count > oneDay ? ltkInterval * 8 : ltkInterval;
+    uint32_t d = intv - dt;
+    // Serial.println(d);
     if (d > 1100 && count > 2) deepSleep(d);
     else delay(d);
   }
@@ -236,27 +272,43 @@ void loop() {
 
   digitalWrite(LED_BUILTIN, 1);
 
+  // transmit Lotek burst
+
   int status1 = configLotek();
   if (status1 != 0) blink();
-  else radio.transmit(ltkPacket, ltkPacketLen);
+  else {
+    const uint32_t dly = (RADIOLIB_SX127X_FIFO_THRESH-1) * 4; // 4ms per byte
+    const uint32_t dly1 = (ltkPacketLen % (RADIOLIB_SX127X_FIFO_THRESH-1)) * 4 + 10;
+    status1 = radio.startTransmit(ltkPacket, ltkPacketLen);
+    if (status1 == 0) {
+      int remainder = ltkPacketLen;
+      // fifoAdd returns true when there was no more data to be sent
+      while (!radio.fifoAdd(ltkPacket, ltkPacketLen, &remainder)) delay(dly);
+      delay(dly1);
+    }
+  }
+
+  // transmit CTT packet
 
   int status2 = configCTT();
   if (status2 != 0) blink();
-  else radio.transmit(cttPacket, 5);
+  else status2 = radio.transmit(cttPacket, 5);
+
   radio.sleep();
+
+  // debug printing
 
   bool statusOK = status1 == 0 && status2 == 0;
   if (count <= 200) {
     if (statusOK) {
-      Serial.print("TX @");
-      Serial.print(POW);
-      Serial.println("dBm");
+      Serial.print("TX @"); Serial.print(POW); Serial.print("dBm in ");
+      Serial.print(millis()-t0); Serial.println("ms");
     } else {
-      Serial.print("Err: ");
-      Serial.print(status1);
-      Serial.print(" ");
-      Serial.println(status2);
+      Serial.print("Err: "); Serial.print(status1);
+      Serial.print(" "); Serial.println(status2);
     }
+    // Serial.println("=====");
+    if (count == 200) Serial.end();
   }
   count++;
 }
