@@ -8,15 +8,14 @@
 
 #if 1
 constexpr uint32_t INITIAL_HOURS = 12; // for how many hours to TX every few seconds
-// if SWITCH_8X is true then change to 8x the interval (lotekTag[3]) after INITIAL_HOURS
-constexpr bool SWITCH_8X = true;
+constexpr bool SWITCH_8X = true; // after INITIAL_HOURS switch to 8x the interval in lotekTag[3]
 constexpr uint32_t RUN_LENGTH = 15; // after INITIAL_HOURS how many TX in a run
 constexpr uint32_t SLEEP_MINUTES = 67; // after INITIAL_HOURS how long to sleep between runs
 #else
 // values for testing
 constexpr uint32_t INITIAL_HOURS = 1;
 constexpr bool SWITCH_8X = true;
-constexpr uint32_t RUN_LENGTH = 15;
+constexpr uint32_t RUN_LENGTH = 7;
 constexpr uint32_t SLEEP_MINUTES = 17;
 #endif
 
@@ -100,6 +99,7 @@ void setupLotek() {
   // ltkPacket[ltkPacketLen+4] = 0xff;
   // ltkPacket[ltkPacketLen+5] = 0xff;
   // ltkPacketLen+=6;
+  // for (int i=0; i<ltkPacketLen; i++) ltkPacket[i] = 0xff;
 
   Serial.print("Lotek tag [");
   Serial.print(lotekTag[0]); Serial.print(" ");
