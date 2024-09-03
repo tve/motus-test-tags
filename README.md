@@ -1,5 +1,5 @@
-Motus test tags
-===============
+Low-Cost Motus Test Tags
+========================
 
 Code to turn off-the-shelf microcontroller+radio boards into test tags
 for the Motus wildlife tracking system (https://motus.org).
